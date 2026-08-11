@@ -29,6 +29,9 @@ services:
     environment:
       APP_ENV: ${APP_ENV:-development}
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      PYTHONPATH: /app
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
+      SESSION_TTL_SECONDS: ${SESSION_TTL_SECONDS:-1209600}
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-devinsight}:${POSTGRES_PASSWORD:-devinsight_local_only}@db:5432/${POSTGRES_DB:-devinsight}
     ports:
       - "${API_PORT:-8000}:8000"

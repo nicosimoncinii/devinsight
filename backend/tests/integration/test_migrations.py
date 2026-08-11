@@ -7,7 +7,7 @@ from app.db.session import Database
 pytestmark = pytest.mark.integration
 
 
-async def test_initial_migration_created_tenancy_tables() -> None:
+async def test_migrations_created_current_schema() -> None:
     database = Database(get_settings())
     try:
         async with database.engine.connect() as connection:
@@ -24,4 +24,10 @@ async def test_initial_migration_created_tenancy_tables() -> None:
     finally:
         await database.dispose()
 
-    assert {"alembic_version", "users", "workspaces", "workspace_memberships"} <= tables
+    assert {
+        "alembic_version",
+        "users",
+        "user_sessions",
+        "workspaces",
+        "workspace_memberships",
+    } <= tables

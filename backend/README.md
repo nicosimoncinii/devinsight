@@ -41,3 +41,19 @@ app/
 ```
 
 Routes should remain thin. Business behavior belongs in services, and SQL queries belong in persistence repositories.
+
+## Authentication foundation
+
+The API uses revocable server-side sessions. Clients receive an opaque session cookie and a
+double-submit CSRF cookie; only token hashes are stored in PostgreSQL. The GitHub callback planned
+for M4 will create sessions through the existing session service.
+
+Authenticated endpoints currently available:
+
+- `GET /api/v1/auth/me`
+- `GET /api/v1/auth/sessions`
+- `POST /api/v1/auth/logout`
+- `DELETE /api/v1/auth/sessions/{session_id}`
+
+State-changing requests require the CSRF cookie value in the `X-CSRF-Token` header. Set
+`SESSION_COOKIE_SECURE=true` in every HTTPS environment.

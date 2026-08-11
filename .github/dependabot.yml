@@ -13,3 +13,10 @@ updates:
       interval: weekly
     labels:
       - "type: infrastructure"
+
+  - package-ecosystem: pip
+    directory: "/backend"
+    schedule:
+      interval: weekly
+    labels:
+      - "area: backend"

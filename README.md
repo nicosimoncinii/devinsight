@@ -4,7 +4,7 @@
 
 DevInsight is a portfolio-grade SaaS for developers and small teams who want useful, understandable analytics for their GitHub repositories. It will collect repository activity through the GitHub API and present commit, pull request, issue, contributor, and branch insights in a focused dashboard.
 
-> **Project status:** M0 — engineering foundation. The application services are intentionally not implemented yet; development proceeds through small, working milestones.
+> **Project status:** M1 — backend foundation. FastAPI, PostgreSQL connectivity, initial tenancy migrations, health endpoints, and backend quality gates are implemented.
 
 ## Product scope
 
@@ -47,7 +47,7 @@ Node.js 24 LTS is the frontend runtime baseline. Runtime versions are recorded i
 
 ```text
 .
-├── backend/              # FastAPI service (introduced in M1)
+├── backend/              # FastAPI service, migrations, and backend tests
 ├── frontend/             # Next.js application (introduced in M2)
 ├── docs/                 # Architecture and decision records
 ├── .github/              # CI and collaboration configuration
@@ -65,7 +65,7 @@ Node.js 24 LTS is the frontend runtime baseline. Runtime versions are recorded i
 - Python 3.13 (required from M1)
 - GNU Make is optional; equivalent Docker commands are shown below
 
-### Start PostgreSQL
+### Start PostgreSQL and the API
 
 ```bash
 cp .env.example .env
@@ -80,6 +80,14 @@ Copy-Item .env.example .env
 docker compose up -d db
 docker compose ps
 ```
+
+Build and start the complete M1 backend environment:
+
+```bash
+docker compose up -d --build db api
+```
+
+The API exposes liveness at `http://localhost:8000/api/v1/health/live`, readiness at `http://localhost:8000/api/v1/health/ready`, and OpenAPI documentation at `http://localhost:8000/api/v1/docs`.
 
 Validate the Compose file without starting containers:
 

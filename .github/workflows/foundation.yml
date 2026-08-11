@@ -1,0 +1,54 @@
+name: Foundation CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: foundation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  repository-standards:
+    name: Repository standards
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - name: Check whitespace errors
+        run: git diff --check HEAD^ HEAD
+
+      - name: Verify foundation files
+        shell: bash
+        run: |
+          required_files=(
+            .editorconfig
+            .env.example
+            .gitattributes
+            .gitignore
+            .nvmrc
+            .python-version
+            CONTRIBUTING.md
+            DESIGN.md
+            README.md
+            SECURITY.md
+            docker-compose.yml
+          )
+
+          for file in "${required_files[@]}"; do
+            test -f "$file" || { echo "Missing required file: $file"; exit 1; }
+          done
+
+      - name: Validate Docker Compose
+        run: docker compose --env-file .env.example config --quiet
